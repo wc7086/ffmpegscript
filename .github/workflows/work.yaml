@@ -33,6 +33,11 @@ on:
         description: 'file format'
         required: true
         default: '.zip'
+      uploadToOneDrive:
+        description: 'Upload to OneDrive'
+        required: false
+        default: 'true'
+        type: boolean
 
 jobs:
   build:
