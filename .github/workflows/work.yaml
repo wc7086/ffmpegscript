@@ -56,9 +56,9 @@ jobs:
         mkdir -p C:\work\out
     - name: Download
       run: |
-        if('${{ github.event.inputs.downloadTool }}' -eq 'yt-dlp'){yt-dlp ${{ github.event.inputs.downloadToolOptions }} ${{ github.event.inputs.url }}}
-        if('${{ github.event.inputs.downloadTool }}' -eq 'youtube-dl'){youtube-dl ${{ github.event.inputs.downloadToolOptions }} ${{ github.event.inputs.url }}}
-        if('${{ github.event.inputs.downloadTool }}' -eq 'curl'){curl ${{ github.event.inputs.downloadToolOptions }} ${{ github.event.inputs.url }}}
+        if('${{ github.event.inputs.downloadTool }}' -eq 'yt-dlp'){yt-dlp ${{ github.event.inputs.downloadToolOptions }} '${{ github.event.inputs.url }}'}
+        if('${{ github.event.inputs.downloadTool }}' -eq 'youtube-dl'){youtube-dl ${{ github.event.inputs.downloadToolOptions }} '${{ github.event.inputs.url }}'}
+        if('${{ github.event.inputs.downloadTool }}' -eq 'curl'){curl ${{ github.event.inputs.downloadToolOptions }} '${{ github.event.inputs.url }}'}
     - name: decompress
       if: github.event.inputs.decompress == 'true'
       run: |
