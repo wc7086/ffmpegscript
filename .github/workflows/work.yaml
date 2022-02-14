@@ -52,9 +52,9 @@ jobs:
         mkdir -p C:\work
     - name: Download
       run: |
-        if(${{ github.event.inputs.downloadTool }} -eq 'yt-dlp'){yt-dlp ${{ github.event.inputs.downloadToolOptions }} ${{ github.event.inputs.url }}}
-        if(${{ github.event.inputs.downloadTool }} -eq 'youtube-dl'){youtube-dl ${{ github.event.inputs.downloadToolOptions }} ${{ github.event.inputs.url }}}
-        if(${{ github.event.inputs.downloadTool }} -eq 'curl'){curl ${{ github.event.inputs.downloadToolOptions }} ${{ github.event.inputs.url }}}
+        if('${{ github.event.inputs.downloadTool }}' -eq 'yt-dlp'){yt-dlp ${{ github.event.inputs.downloadToolOptions }} ${{ github.event.inputs.url }}}
+        if('${{ github.event.inputs.downloadTool }}' -eq 'youtube-dl'){youtube-dl ${{ github.event.inputs.downloadToolOptions }} ${{ github.event.inputs.url }}}
+        if('${{ github.event.inputs.downloadTool }}' -eq 'curl'){curl ${{ github.event.inputs.downloadToolOptions }} ${{ github.event.inputs.url }}}
     - name: decompress
       if: github.event.inputs.decompress == 'true'
       run: |
@@ -62,7 +62,7 @@ jobs:
         7zip x $file
     - name: ffmpeg transcoding
       run: |
-        if(${{ github.event.inputs.downloadTool }} -eq 'webm to mov'){bash for i in *.webm; do ffmpeg -i "$i" -pix_fmt yuv422p10le -c:v prores -profile:v 3 -vendor ap10 out/"$(basename "$i" .webm)".mov; done}
+        if('${{ github.event.inputs.ffmpegOptions }}' -eq 'webm to mov'){bash for i in *.webm; do ffmpeg -i "$i" -pix_fmt yuv422p10le -c:v prores -profile:v 3 -vendor ap10 out/"$(basename "$i" .webm)".mov; done}
     - name: Upload all to OneDrive
       if: github.event.inputs.uploadToOneDrive == 'true'
       run: |
