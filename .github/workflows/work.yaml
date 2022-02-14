@@ -1,0 +1,71 @@
+name: transcoding
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'Download url'
+        required: true
+      downloadTool:
+        description: 'Download tool'
+        required: true
+        default: 'yt-dlp'
+        type: choice
+        options:
+          - yt-dlp
+          - youtube-dl
+          - curl
+      downloadToolOptions:
+        description: 'Download tool options'
+        required: false
+      ffmpegOptions:
+        desctiption: 'ffmpeg options'
+        required: true
+        default: 'webm to mov'
+        type: choice
+        options:
+          - webm to mov
+      decompress:
+        desctiption: 'decompress'
+        required: false
+        default: 'flase'
+        type: boolean
+      fileFormat:
+        desctiption: 'file format'
+        required: true
+        default: '.zip'
+
+jobs:
+  build:
+    runs-on: windows-2022
+    defaults:
+      run:
+        working-directory: C:\work
+    steps:
+    - name: Installation dependencies
+      working-directory: .\
+      run: |
+        choco install 7zip
+        choco install msys2
+        choco install rclone
+        choco install ffmpeg
+        choco install ${{ github.event.inputs.downloadTool }}
+        mkdir -p C:\work
+    - name: Download
+      run: |
+        if(${{ github.event.inputs.downloadToolOptions }} -eq 'yt-dlp'){yt-dlp ${{ github.event.inputs.downloadToolOptions }} ${{ github.event.inputs.url }}}
+        if(${{ github.event.inputs.downloadToolOptions }} -eq 'youtube-dl'){youtube-dl ${{ github.event.inputs.downloadToolOptions }} ${{ github.event.inputs.url }}}
+        if(${{ github.event.inputs.downloadToolOptions }} -eq 'curl'){curl ${{ github.event.inputs.downloadToolOptions }} ${{ github.event.inputs.url }}}
+    - name: decompress
+      if: github.event.inputs.decompress == 'true'
+      run: |
+        $file=Get-ChildItem *${{ github.event.inputs.decompress }} -Name
+        7zip x $file
+    - name: ffmpeg transcoding
+      run: |
+        if(${{ github.event.inputs.downloadToolOptions }} -eq 'webm to mov'){bash for i in *.webm; do ffmpeg -i "$i" -pix_fmt yuv422p10le -c:v prores -profile:v 3 -vendor ap10 out/"$(basename "$i" .webm)".mov; done}
+    - name: Upload all to OneDrive
+      if: github.event.inputs.uploadToOneDrive == 'true'
+      run: |
+        mkdir -p $ENV:APPDATA\rclone
+        echo '${{ secrets.RCLONE_CONFIG }}' >> $ENV:APPDATA\rclone\rclone.conf
+        rclone copy out\* "onedrive:/Public/os/windows" -P
