@@ -48,7 +48,7 @@ jobs:
         choco install rclone
         choco install ffmpeg
         choco install ${{ github.event.inputs.downloadTool }}
-        mkdir -p C:\work
+        mkdir -p C:\work\out
     - name: Download
       run: |
         if('${{ github.event.inputs.downloadTool }}' -eq 'yt-dlp'){yt-dlp ${{ github.event.inputs.downloadToolOptions }} ${{ github.event.inputs.url }}}
