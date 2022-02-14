@@ -45,7 +45,6 @@ jobs:
       working-directory: .\
       run: |
         choco install 7zip
-        choco install msys2
         choco install rclone
         choco install ffmpeg
         choco install ${{ github.event.inputs.downloadTool }}
@@ -61,8 +60,9 @@ jobs:
         $file=Get-ChildItem *${{ github.event.inputs.decompress }} -Name
         7zip x $file
     - name: ffmpeg transcoding
+      shell: bash
       run: |
-        if('${{ github.event.inputs.ffmpegOptions }}' -eq 'webm to mov'){bash for i in *.webm; do ffmpeg -i "$i" -pix_fmt yuv422p10le -c:v prores -profile:v 3 -vendor ap10 out/"$(basename "$i" .webm)".mov; done}
+        if '${{ github.event.inputs.ffmpegOptions }}' == 'webm to mov'; then for i in *.webm; do ffmpeg -i "$i" -pix_fmt yuv422p10le -c:v prores -profile:v 3 -vendor ap10 out/"$(basename "$i" .webm)".mov; done fi
     - name: Upload all to OneDrive
       if: github.event.inputs.uploadToOneDrive == 'true'
       run: |
