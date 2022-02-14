@@ -73,4 +73,4 @@ jobs:
       run: |
         mkdir -p $ENV:APPDATA\rclone
         echo '${{ secrets.RCLONE_CONFIG }}' >> $ENV:APPDATA\rclone\rclone.conf
-        rclone copy out\* "onedrive:/tmp" -P
+        rclone copy out\* "OneDrive:/tmp" -P
