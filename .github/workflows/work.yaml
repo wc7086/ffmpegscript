@@ -67,7 +67,7 @@ jobs:
     - name: ffmpeg transcoding
       shell: bash
       run: |
-        if [[ "${{ github.event.inputs.ffmpegOptions }}" == "webm to mov" ]]; then for i in *.webm; do ffmpeg -i "$i" -pix_fmt yuv422p10le -c:v prores -profile:v 3 -vendor ap10 out/"$(basename "$i" .webm)".mov; done fi
+        if [[ "${{ github.event.inputs.ffmpegOptions }}" == "webm to mov" ]]; then for i in *.webm; do ffmpeg -i "$i" -pix_fmt yuv422p10le -c:v prores -profile:v 3 -vendor ap10 out\"$(basename "$i" .webm)".mov; done fi
     - name: Upload all to OneDrive
       if: github.event.inputs.uploadToOneDrive == 'true'
       run: |
